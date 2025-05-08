@@ -21,6 +21,7 @@ if __name__=='__main__':
     parser.add_argument('--chi2',             help='Spin 2',             default=None)
     parser.add_argument('--f0',   type=float, help='Initial frequency',  default=0.004)
     parser.add_argument('--ecc',  type=float, help='Eccentricity',       default=0.)
+    parser.add_argument('--save',             help='Save figure?',       action='store_true')
 
     args = parser.parse_args()
 
@@ -44,9 +45,11 @@ if __name__=='__main__':
             mode = mode[:2]
         klm     = mode_to_k(int(mode[0]), int(mode[1]))
         parname = args.par.replace(mode, 'lm')
+        dictq   = True
     else:
         parname = args.par
         klm     = 1
+        dictq   = False
 
     if args.chi1 is None and args.chi2 is None:
         chi1 = chi2 = [0., 0., args.chi]
@@ -69,7 +72,6 @@ if __name__=='__main__':
                         chi1x=chi1[0], chi1y=chi1[1], chi1z=chi1[2],
                         chi2x=chi2[0], chi2y=chi2[1], chi2z=chi2[2],
                         f0=args.f0, ecc=args.ecc, use_mode_lm=modesvec)
-    pardic["output_dynamics"] = "yes"
     
     if args.dp is not None and args.np is not None:
         raise ValueError("Specify only one of dp and np!")
@@ -90,12 +92,12 @@ if __name__=='__main__':
     matplotlib.rcParams['text.usetex'] = True
     matplotlib.rcParams['font.size'] = 15
 
-    fig, ax = plt.subplots(2, 2, layout='constrained', sharex='col', figsize=(10, 7), width_ratios=(2, 1))
+    fig, ax = plt.subplots(2, 2, layout='constrained', sharex='col', figsize=(10, 7), width_ratios=(1, 1))
     cmap = sns.color_palette('coolwarm', as_cmap=True)
     cols = cmap((vals - args.min)/(args.max - args.min))
     
     for jj, parval in enumerate(vals):
-        if klm is None:
+        if not dictq:
             pardic[parname] = parval
             if parval == 0.:
                 col = 'k'
@@ -109,7 +111,6 @@ if __name__=='__main__':
             pardic[parname] = {klm: parval}
         
         try:
-            print(pardic[parname])
             t, hp, hc, hlm, dyn = EOB.EOBRunPy(pardic)
             omglm = np.gradient(hlm[f'{klm}'][1], t)
     
@@ -123,9 +124,9 @@ if __name__=='__main__':
             print("Not this value!")
     
     for any_ax in ax[:, 0]:
-        any_ax.set_xlim([1.05*t[0], -75])
+        any_ax.set_xlim([1.05*t[0], -125])
     for any_ax in ax[:, 1]:
-        any_ax.set_xlim([-75, 75])
+        any_ax.set_xlim([-125, 75])
     for any_ax in ax[1, :]:
         any_ax.set_xlabel(r'$t/M$')
     ax[0, 0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))
@@ -135,4 +136,6 @@ if __name__=='__main__':
     cbar      = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm_cbar, cmap=cmap), ax=ax[:, 1])
     cbar.ax.set_ylabel(parlabel[parname])
 
+    if args.save:
+        fig.savefig(f'figs/{args.par}_{args.min}_{args.max}.png')
     plt.show()
