@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import EOBRun_module as EOB
 from PyART.models.teob import CreateDict
-from PyART.utils.wf_utils import mode_to_k
+from PyART.utils.wf_utils import mode_to_k, k_to_ell, k_to_emm
 import seaborn as sns
 import argparse
 import re
@@ -35,9 +35,10 @@ if __name__=='__main__':
                 'delta_Omglm_nqc' : r'$\delta \omega_{\ell m}^{\rm NQC}$',
                 'delta_dOmglm_nqc': r'$\delta \dot{\omega}_{\ell m}^{\rm NQC}$',
                 'delta_alphalm0'  : r'$\delta \alpha_{\ell m 0}$',
-                'delta_omglm0'    : r'$\delta \omega_{\ell m 0}$'}
+                'delta_omglm0'    : r'$\delta \omega_{\ell m 0}$',
+                'd_delta_t_nqc'   : r'$\delta \Delta t_{\rm NQC}$'}
 
-    if 'mrg' in args.par or 'nqc' in args.par or 'alpha' in args.par or 'omg' in args.par:
+    if args.par != 'd_delta_t_nqc' and ('mrg' in args.par or 'nqc' in args.par or 'alpha' in args.par or 'omg' in args.par):
         mode    = re.findall(r'\d+', args.par)[0]
         if len(mode) == 3:
             mode = mode[:2]
@@ -45,7 +46,7 @@ if __name__=='__main__':
         parname = args.par.replace(mode, 'lm')
     else:
         parname = args.par
-        klm     = None
+        klm     = 1
 
     if args.chi1 is None and args.chi2 is None:
         chi1 = chi2 = [0., 0., args.chi]
@@ -59,11 +60,16 @@ if __name__=='__main__':
             chi2 = [0., 0., eval(args.chi2)]
         elif isinstance(eval(args.chi2), list):
             chi2 = eval(args.chi2)
+
+    l = k_to_ell(klm)
+    m = k_to_emm(klm)
+    modesvec = [jj for jj in range(max(klm + 1, 2))]
     
     pardic = CreateDict(q=args.q, 
                         chi1x=chi1[0], chi1y=chi1[1], chi1z=chi1[2],
                         chi2x=chi2[0], chi2y=chi2[1], chi2z=chi2[2],
-                        f0=args.f0, ecc=args.ecc)
+                        f0=args.f0, ecc=args.ecc, use_mode_lm=modesvec)
+    pardic["output_dynamics"] = "yes"
     
     if args.dp is not None and args.np is not None:
         raise ValueError("Specify only one of dp and np!")
@@ -74,6 +80,11 @@ if __name__=='__main__':
     else:
         raise ValueError("Specify one of dp and np!")
     
+    # Make sure vanilla wf also drawn, and last
+    if 0. in vals:
+        j0 = np.where(vals == 0.)[0][0]
+        vals = np.delete(vals, j0)
+    vals = np.append(vals, 0.)
     
     matplotlib.rcParams['font.family'] = 'serif'
     matplotlib.rcParams['text.usetex'] = True
@@ -86,17 +97,28 @@ if __name__=='__main__':
     for jj, parval in enumerate(vals):
         if klm is None:
             pardic[parname] = parval
+            if parval == 0.:
+                col = 'k'
+            else:
+                col = cols[jj]
         else:
+            if parval == 0.:
+                col = 'k'
+            else:
+                col = cols[jj]
             pardic[parname] = {klm: parval}
         
         try:
+            print(pardic[parname])
             t, hp, hc, hlm, dyn = EOB.EOBRunPy(pardic)
-            omg22 = np.gradient(hlm['1'][1], t)
+            omglm = np.gradient(hlm[f'{klm}'][1], t)
     
-            ax[0, 0].plot(t, hlm['1'][0], color=cols[jj])
-            ax[0, 1].plot(t, hlm['1'][0], color=cols[jj])
-            ax[1, 0].plot(t, omg22,       color=cols[jj])
-            ax[1, 1].plot(t, omg22,       color=cols[jj])
+            ax[0, 0].plot(t, hlm[f'{klm}'][0], color=col)
+            ax[0, 1].plot(t, hlm[f'{klm}'][0], color=col)
+            # ax[0, 0].plot(t, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
+            # ax[0, 1].plot(t, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
+            ax[1, 0].plot(t, omglm,       color=col)
+            ax[1, 1].plot(t, omglm,       color=col)
         except ValueError:
             print("Not this value!")
     
@@ -106,8 +128,8 @@ if __name__=='__main__':
         any_ax.set_xlim([-75, 75])
     for any_ax in ax[1, :]:
         any_ax.set_xlabel(r'$t/M$')
-    ax[0, 0].set_ylabel(r'$|h_{22}|$')
-    ax[1, 0].set_ylabel(r'$\omega_{22}$')
+    ax[0, 0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))
+    ax[1, 0].set_ylabel(r'$\omega_{{{}{}}}$'.format(l, m))
     
     norm_cbar = matplotlib.colors.Normalize(vmin=args.min, vmax=args.max)
     cbar      = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm_cbar, cmap=cmap), ax=ax[:, 1])
