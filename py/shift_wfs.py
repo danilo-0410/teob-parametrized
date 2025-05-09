@@ -10,18 +10,21 @@ import re
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--par',  type=str,   help='Parameter to shift', required=True)
-    parser.add_argument('--min',  type=float, help='Minimum value',      required=True)
-    parser.add_argument('--max',  type=float, help='Maximum value',      required=True)
-    parser.add_argument('--dp',   type=float, help='Step',               default=None)
-    parser.add_argument('--np',   type=int,   help='Number of values',   default=None)
-    parser.add_argument('--q',    type=float, help='Mass ratio',         default=1.)
-    parser.add_argument('--chi',  type=float, help='Spin',               default=0.)
-    parser.add_argument('--chi1',             help='Spin 1',             default=None)
-    parser.add_argument('--chi2',             help='Spin 2',             default=None)
-    parser.add_argument('--f0',   type=float, help='Initial frequency',  default=0.004)
-    parser.add_argument('--ecc',  type=float, help='Eccentricity',       default=0.)
-    parser.add_argument('--save',             help='Save figure?',       action='store_true')
+    parser.add_argument('--par',               type=str,   help='Parameter to shift', required=True)
+    parser.add_argument('--min',               type=float, help='Minimum value',      required=True)
+    parser.add_argument('--max',               type=float, help='Maximum value',      required=True)
+    parser.add_argument('--dp',                type=float, help='Step',               default=None)
+    parser.add_argument('--np',                type=int,   help='Number of values',   default=None)
+    parser.add_argument('--q',                 type=float, help='Mass ratio',         default=1.)
+    parser.add_argument('--chi',               type=float, help='Spin',               default=0.)
+    parser.add_argument('--chi1',                          help='Spin 1',             default=None)
+    parser.add_argument('--chi2',                          help='Spin 2',             default=None)
+    parser.add_argument('--f0',                type=float, help='Initial frequency',  default=0.004)
+    parser.add_argument('--ecc',               type=float, help='Eccentricity',       default=0.)
+    parser.add_argument('-lb2', '--LambdaBl2', type=float, help='LambdaBl2',          default=0.)
+    parser.add_argument('--real',                          help='Plot real part',     action='store_true')
+    parser.add_argument('--align',             type=str,   help='Where to align',     default='peak')
+    parser.add_argument('--save',                          help='Save figure?',       action='store_true')
 
     args = parser.parse_args()
 
@@ -71,7 +74,8 @@ if __name__=='__main__':
     pardic = CreateDict(q=args.q, 
                         chi1x=chi1[0], chi1y=chi1[1], chi1z=chi1[2],
                         chi2x=chi2[0], chi2y=chi2[1], chi2z=chi2[2],
-                        f0=args.f0, ecc=args.ecc, use_mode_lm=modesvec)
+                        f0=args.f0, ecc=args.ecc, use_mode_lm=modesvec,
+                        LambdaBl2=args.LambdaBl2)
     
     if args.dp is not None and args.np is not None:
         raise ValueError("Specify only one of dp and np!")
@@ -114,19 +118,25 @@ if __name__=='__main__':
             t, hp, hc, hlm, dyn = EOB.EOBRunPy(pardic)
             omglm = np.gradient(hlm[f'{klm}'][1], t)
     
-            ax[0, 0].plot(t, hlm[f'{klm}'][0], color=col)
-            ax[0, 1].plot(t, hlm[f'{klm}'][0], color=col)
-            # ax[0, 0].plot(t, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
-            # ax[0, 1].plot(t, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
-            ax[1, 0].plot(t, omglm,       color=col)
-            ax[1, 1].plot(t, omglm,       color=col)
+            if args.align == 'peak':
+                tp = t
+            elif args.align == 'start':
+                tp = t - t[0]
+            if args.real:
+                ax[0, 0].plot(tp, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
+                ax[0, 1].plot(tp, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
+            else:
+                ax[0, 0].plot(tp, hlm[f'{klm}'][0], color=col)
+                ax[0, 1].plot(tp, hlm[f'{klm}'][0], color=col)
+            ax[1, 0].plot(tp, omglm, color=col)
+            ax[1, 1].plot(tp, omglm, color=col)
         except ValueError:
             print("Not this value!")
     
     for any_ax in ax[:, 0]:
-        any_ax.set_xlim([1.05*t[0], -125])
+        any_ax.set_xlim([1.05*t[0] + (tp[0] - t[0]), -125 + (tp[0] - t[0])])
     for any_ax in ax[:, 1]:
-        any_ax.set_xlim([-125, 75])
+        any_ax.set_xlim([-125 + (tp[0] - t[0]), 75 + (tp[0] - t[0])])
     for any_ax in ax[1, :]:
         any_ax.set_xlabel(r'$t/M$')
     ax[0, 0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))

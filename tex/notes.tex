@@ -158,6 +158,9 @@
 \newcommand{\bphi}[0]{\bar{\varphi}}
 \newcommand{\dbphi}[0]{\dot{\bar{\varphi}}}
 \newcommand{\dphi}[0]{\dot{\varphi}}
+\newcommand{\amrg}[1]{{A_{#1}^{\rm mrg}}}
+\newcommand{\anqc}[1]{{A_{#1}^{\rm NQC}}}
+\newcommand{\omgmrg}[1]{{\omega_{#1}^{\rm mrg}}}
 
 \interfootnotelinepenalty=10000
 
@@ -173,7 +176,7 @@
 % \affiliation{${}^{4}$ Department of Physics, University of California, Berkeley, CA 94720, USA}
 
 \begin{abstract}
-Notes on the implementation and testing of \TEOBB, a version of the \TEOBResumSDali~model that includes
+Notes on the implementation and testing of \TEOBB (tentative), a version of the \TEOBResumSDali~model that includes
 deviations from a set of NR-informed quantities that have a role in waveform generation.
 \end{abstract}
 
@@ -245,7 +248,7 @@ x &\in \{A, \dot{A}, \omega, \dot{\omega}\} \, .
 \end{itemize}
 %
 A note on the NQC point deviations: currently the location of the \ac{nqc} point in \TEOBResumSDali~differs between modes. 
-We have three different implementations: 
+We have three different implementations:
 \begin{itemize}
 
 \item[(i)] For the $(2,2), (3,2), (4,2)$ and $(4,3)$ modes, the \ac{nqc} point is tied to the peak time of the $(2,2)$
@@ -257,14 +260,70 @@ The NQC extraction point thus falls in the post-merger part of the waveform, whe
 template is valid; so, the amplitude, frequency and their derivatives can be computed by evaluating the
 template at the appropriate time. This means that \textit{the merger time deviations also influence the NQC time
 quantities}.
-\item[(ii)] The \ac{nqc} point is located as defined above, but the \ac{nqc} quantities
+\item[(ii)] For the $(5,5)$ mode, the \ac{nqc} point is located as defined above, but the \ac{nqc} quantities
 are computed through direct NR fits; in this case, the merger and NQC time deviations are completely independent.
 \item[(iii)] For the $(2,1), (3,3)$ and $(4,4)$ modes, the NQC point coincides
 with the peak of the $(2,2)$ mode, $t_{\ell m}^{\rm NQC} = t_{A_{22}^{\rm peak}}^{\rm EOB}$; direct NR fits 
 are used in these cases as well. Here, the merger and NQC amplitude and frequency deviations actually affect
 the same physical quantities, while acting independently and entering the model at (slightly) different stages.
 \end{itemize}
-\DC{Check all this}
+
+\subsection{Visualizing the effect of the deviations}
+
+\begin{figure*}
+    \includegraphics[width=0.49\textwidth]{figs/delta_a6c_-8.0_8.0.png}
+    \includegraphics[width=0.49\textwidth]{figs/delta_cN3LO_-10.0_10.0.png}
+    \caption{Effect of the variation of $a_6^{\rm c}$ and $\c3$ on the $(2,2)$ mode real part and frequency
+    for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. Waveforms here are aligned so they always start at $t = 0$,
+    to better appreciate the cumulative effect of the deformed dynamics. $\delta a_6^c$ and $\delta \c3$ cause a slightly
+    delayed or accelerated late inspiral and plunge, shifting the phase of the signal. The model is quite
+    sensitive to variations of $a_6^c$, delivering unphysical results for deviations $\geq 8$ in this case.
+    We see that an increase in $a_6^c$ delays the merger, while a decrease moves it forward slightly. The
+    opposite is true for $\c3$ in this case; with negative spins it would instead be the same (delayed merger with
+    increase in $c3$).}
+\end{figure*}
+
+\begin{figure*}
+    \includegraphics[width=0.49\textwidth]{figs/delta_alpha220_-0.8_1.0.png}
+    \includegraphics[width=0.49\textwidth]{figs/delta_omg220_-0.8_1.0.png}
+    \caption{Effect of the variation of $\alpha_{220}$ and $\omega_{220}$ on the $(2,2)$ mode amplitude and frequency
+    for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. Waveforms here are aligned so that for each
+    $t = 0$ corresponds to the peak of $|h_{22}|$. An increase in the inverse damping time leads to a faster
+    decaying ringdown, and vice-versa; this also affects the frequency evolution due to the structure of the
+    ringdown model. Shifting the frequency does not instead significantly affect the amplitude.}
+\end{figure*}
+
+\begin{figure*}
+    \includegraphics[width=0.49\textwidth]{figs/delta_abhf_-0.9_0.2.png}
+    \includegraphics[width=0.49\textwidth]{figs/delta_Mbhf_-0.5_1.0.png}
+    \caption{Effect of the variation of $\mbhf$ and $\abhf$ on the $(2,2)$ mode amplitude and frequency
+    for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. Waveforms here are aligned so that for each
+    $t = 0$ corresponds to the peak of $|h_{22}|$. An increase in the inverse damping time leads to a faster
+    decaying ringdown, and vice-versa, as expected; this also affects the frequency evolution due to the structure of the
+    ringdown model. Shifting the frequency does not instead significantly affect the amplitude.}
+\end{figure*}
+
+\begin{figure*}
+    \includegraphics[width=0.49\textwidth]{figs/delta_A22_mrg_-0.8_1.0.png}
+    \includegraphics[width=0.49\textwidth]{figs/delta_Omg22_mrg_-0.8_1.0.png}
+    \caption{Effect of the variation of $\amrg{22}$ and $\omgmrg{22}$ on the $(2,2)$ mode amplitude and frequency
+    for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. Waveforms here are aligned so that for each
+    $t = 0$ corresponds to the peak of $|h_{22}|$. Here we see how the shift in the merger quantities carries
+    over to the NQC corrections, which enforce a match between the inspiral and ringdown. Increasing the amplitude
+    does not change the location of the peak. Decreasing it however does (as is clear by the frequency plot),
+    while also causing in the more extreme cases a non-smooth transition to the ringdown part of the signal.}
+\end{figure*}
+
+\begin{figure*}
+    \includegraphics[width=0.49\textwidth]{figs/delta_A21_mrg_-0.8_1.0.png}
+    \includegraphics[width=0.49\textwidth]{figs/delta_A22_nqc_-0.8_1.0.png}
+    \caption{\textit{Left:} Effect of the variation of $\amrg{21}$ on the $(2,1)$ mode of the waveform
+    for a binary with $q = 2, \chi_1 = \chi_2 = 0.6$.
+    For this multipole, the NQC point quantities are computed from a dedicated fit, with no direct link
+    with the post-merger model, so the inspiral part does not link up smoothly with the ringdown.
+    \textit{Right:} Variation of $\anqc{22}$ for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. The
+    deformed NQC corrections here are not matched to a similarly modified post-merger signal, causing a discontinuity.}
+\end{figure*}
 
 \bibliography{refs, local}
 
