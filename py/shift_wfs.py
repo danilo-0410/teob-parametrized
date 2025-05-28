@@ -23,6 +23,7 @@ if __name__=='__main__':
     parser.add_argument('--ecc',               type=float, help='Eccentricity',       default=0.)
     parser.add_argument('-lb2', '--LambdaBl2', type=float, help='LambdaBl2',          default=0.)
     parser.add_argument('--real',                          help='Plot real part',     action='store_true')
+    parser.add_argument('--dyn',                           help='Plot dynamics',      action='store_true')
     parser.add_argument('--align',             type=str,   help='Where to align',     default='peak')
     parser.add_argument('--save',                          help='Save figure?',       action='store_true')
 
@@ -39,10 +40,11 @@ if __name__=='__main__':
                 'delta_Omglm_nqc' : r'$\delta \omega_{\ell m}^{\rm NQC}$',
                 'delta_dOmglm_nqc': r'$\delta \dot{\omega}_{\ell m}^{\rm NQC}$',
                 'delta_alphalm0'  : r'$\delta \alpha_{\ell m 0}$',
+                'delta_taulm0'    : r'$\delta \tau_{\ell m 0}$',
                 'delta_omglm0'    : r'$\delta \omega_{\ell m 0}$',
                 'd_delta_t_nqc'   : r'$\delta \Delta t_{\rm NQC}$'}
 
-    if args.par != 'd_delta_t_nqc' and ('mrg' in args.par or 'nqc' in args.par or 'alpha' in args.par or 'omg' in args.par):
+    if args.par != 'd_delta_t_nqc' and ('mrg' in args.par or 'nqc' in args.par or 'alpha' in args.par or 'tau' in args.par or 'omg' in args.par):
         mode    = re.findall(r'\d+', args.par)[0]
         if len(mode) == 3:
             mode = mode[:2]
@@ -75,7 +77,7 @@ if __name__=='__main__':
                         chi1x=chi1[0], chi1y=chi1[1], chi1z=chi1[2],
                         chi2x=chi2[0], chi2y=chi2[1], chi2z=chi2[2],
                         f0=args.f0, ecc=args.ecc, use_mode_lm=modesvec,
-                        LambdaBl2=args.LambdaBl2)
+                        LambdaBl2=args.LambdaBl2, use_nqc=True)
     
     if args.dp is not None and args.np is not None:
         raise ValueError("Specify only one of dp and np!")
@@ -97,6 +99,8 @@ if __name__=='__main__':
     matplotlib.rcParams['font.size'] = 15
 
     fig, ax = plt.subplots(2, 2, layout='constrained', sharex='col', figsize=(10, 7), width_ratios=(1, 1))
+    if args.dyn:
+        fid, ad = plt.subplots(2, 2, layout='constrained', sharex='col', figsize=(10, 7), width_ratios=(1, 1))
     cmap = sns.color_palette('coolwarm', as_cmap=True)
     cols = cmap((vals - args.min)/(args.max - args.min))
     
@@ -122,6 +126,7 @@ if __name__=='__main__':
                 tp = t
             elif args.align == 'start':
                 tp = t - t[0]
+            dyn['t'] = dyn['t'] - dyn['t'][0] + tp[0]
             if args.real:
                 ax[0, 0].plot(tp, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
                 ax[0, 1].plot(tp, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
@@ -130,6 +135,12 @@ if __name__=='__main__':
                 ax[0, 1].plot(tp, hlm[f'{klm}'][0], color=col)
             ax[1, 0].plot(tp, omglm, color=col)
             ax[1, 1].plot(tp, omglm, color=col)
+
+            if args.dyn:
+                ad[0, 0].plot(dyn['t'], dyn['r'], color=col)
+                ad[0, 1].plot(dyn['t'], dyn['r'], color=col)
+                ad[1, 0].plot(dyn['t'], dyn['MOmega'], color=col)
+                ad[1, 1].plot(dyn['t'], dyn['MOmega'], color=col)
         except ValueError:
             print("Not this value!")
     
@@ -141,11 +152,27 @@ if __name__=='__main__':
         any_ax.set_xlabel(r'$t/M$')
     ax[0, 0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))
     ax[1, 0].set_ylabel(r'$\omega_{{{}{}}}$'.format(l, m))
+
+    if args.dyn:
+        for any_ax in ad[:, 0]:
+            any_ax.set_xlim([1.05*t[0] + (tp[0] - t[0]), -125 + (tp[0] - t[0])])
+        for any_ax in ad[:, 1]:
+            any_ax.set_xlim([-125 + (tp[0] - t[0]), 125 + (tp[0] - t[0])])
+        for any_ax in ad[1, :]:
+            any_ax.set_xlabel(r'$t/M$')
+        ad[0, 1].set_ylim([0., 7.])
+        ad[0, 0].set_ylabel(r'$r/M$')
+        ad[1, 0].set_ylabel(r'$\Omega$')
     
     norm_cbar = matplotlib.colors.Normalize(vmin=args.min, vmax=args.max)
     cbar      = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm_cbar, cmap=cmap), ax=ax[:, 1])
     cbar.ax.set_ylabel(parlabel[parname])
+    if args.dyn:
+        cbar      = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm_cbar, cmap=cmap), ax=ad)
+        cbar.ax.set_ylabel(parlabel[parname])
 
     if args.save:
         fig.savefig(f'figs/{args.par}_{args.min}_{args.max}.png')
+        if args.dyn:
+            fid.savefig(f'figs/{args.par}_{args.min}_{args.max}_dyn.png')
     plt.show()

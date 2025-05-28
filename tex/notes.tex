@@ -68,6 +68,7 @@
 \def\mbhf{M_{\rm BH}^f}
 \def\abhf{a_{\rm BH}^f}
 \def\alphalm0{\alpha_{\ell m 0}}
+\def\taulm0{\tau_{\ell m 0}}
 \def\omegalm0{\omega_{\ell m 0}}
 
 
@@ -205,26 +206,35 @@ a_6^c &\rightarrow a_6^c + \delta a_6^c \\
 \end{subequations}
 Concerning the waveform model, the deformations we allow are the following:
 \begin{itemize}
-\item Fractional deviations from the mass and spin of the final remnant \ac{bh}, which determine the properties
-of the post-merger signal:
-\begin{subequations}
-\begin{align}
-\mbhf &\rightarrow \mbhf (1 + \delta \mbhf) \\
-\abhf &\rightarrow \abhf (1 + \delta \abhf)
-\end{align}
-\end{subequations}
-The bare values used in the standard version of the model are highly accurate fits of NR data~\cite{paper}.
+    \item A shift in the otherwise fixed value of $\Delta t_{\rm NQC}$, a parameter that determines the location
+    of the peak amplitude of the model waveform and that of the \ac{nqc} extraction point with respect to the
+    time when the pure orbital frequency $\Omega_{\rm orb}$ reaches a final peak. This parameter is set
+    to $\Delta t_{\rm NQC} = 1M$ in the model, roughly extrapolating from the test-mass result. The implemented
+    deviation is additive:
+    \begin{equation}
+    \Delta t_{\rm NQC} \rightarrow \Delta t_{\rm NQC} + \delta \Delta t_{\rm NQC}
+    \end{equation}
+    \item Fractional deviations from the mass and spin of the final remnant \ac{bh}, which determine the properties
+    of the post-merger signal:
+    \begin{subequations}
+    \begin{align}
+    \mbhf &\rightarrow \mbhf (1 + \delta \mbhf) \\
+    \abhf &\rightarrow \abhf (1 + \delta \abhf)
+    \end{align}
+    \end{subequations}
+    The bare values used in the standard version of the model are highly accurate fits of NR data~\cite{paper}.
 %
-\item Deviations from the NR-fitted values of the fundamental QNM frequencies $\sigma_{\ell m 0} = \alphalm0
- + i \omegalm0$ of each mode. We separately allow fractional deformations of the inverse damping time,
- $\alphalm0 = \tau_{\ell m 0}^{-1}$, and the oscillatory part of the frequency, $\omegalm0$:
+\item Deviations from the NR-fitted values of the fundamental QNM frequencies (\DC{probably shouldn't call these frequencies})
+$\sigma_{\ell m 0} = \alphalm0 + i \omegalm0$ of each mode. We separately allow fractional deformations of the oscillatory
+term, $\omegalm0$, and either the damping time $\taulm0$ or inverse damping time $\alphalm0 = \taulm0^{-1}$:
 \begin{subequations}
 \begin{align}
 \alphalm0 &\rightarrow \alphalm0 (1 + \delta \alphalm0) \\
+\taulm0   &\rightarrow \taulm0   (1 + \delta \taulm0) \\
 \omegalm0 &\rightarrow \omegalm0 (1 + \delta \omegalm0)
 \end{align}
 \end{subequations}
-We require that the damping time deviations satisfy $\delta \alphalm0 > -1$, to avoid exponentially growing
+We require that the (inverse) damping time deviations satisfy $\delta \taulm0 > -1\  (\delta \alphalm0 > -1)$, to avoid exponentially growing
 post-merger signals.
 %
 \item For each mode, we consider deviations from NR-fitted values of the amplitude and frequency of the
@@ -259,7 +269,8 @@ encoding the delay between the peak of a generic mode $(\ell, m)$ with respect t
 The NQC extraction point thus falls in the post-merger part of the waveform, where the ringdown
 template is valid; so, the amplitude, frequency and their derivatives can be computed by evaluating the
 template at the appropriate time. This means that \textit{the merger time deviations also influence the NQC time
-quantities}.
+quantities}. This is desireable, as it means that the \ac{nqc} corrections will enforce a smooth connection between
+the late inspiral and the ringdown.
 \item[(ii)] For the $(5,5)$ mode, the \ac{nqc} point is located as defined above, but the \ac{nqc} quantities
 are computed through direct NR fits; in this case, the merger and NQC time deviations are completely independent.
 \item[(iii)] For the $(2,1), (3,3)$ and $(4,4)$ modes, the NQC point coincides
@@ -273,14 +284,29 @@ the same physical quantities, while acting independently and entering the model 
 \begin{figure*}
     \includegraphics[width=0.49\textwidth]{figs/delta_a6c_-8.0_8.0.png}
     \includegraphics[width=0.49\textwidth]{figs/delta_cN3LO_-10.0_10.0.png}
-    \caption{Effect of the variation of $a_6^{\rm c}$ and $\c3$ on the $(2,2)$ mode real part and frequency
+    \caption{\label{fig:a6c3}
+    Effect of the variation of $a_6^{\rm c}$ and $\c3$ on the $(2,2)$ mode real part and frequency
     for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. Waveforms here are aligned so they always start at $t = 0$,
     to better appreciate the cumulative effect of the deformed dynamics. $\delta a_6^c$ and $\delta \c3$ cause a slightly
     delayed or accelerated late inspiral and plunge, shifting the phase of the signal. The model is quite
-    sensitive to variations of $a_6^c$, delivering unphysical results for deviations $\geq 8$ in this case.
+    sensitive to the increase of $a_6^c$, delivering unphysical results for deviations $\geq 8$ in this case.
+    This is partly due to the failure of the \ac{nqc} corrections in enforcing a smooth transition to the ringdown
+    portion of the waveform. Dynamically, a broader range of values is allowed for $\delta a_{6}^c$, but
+    if the deviation is large enough the warped potential leads to unphysical late dynamics.
     We see that an increase in $a_6^c$ delays the merger, while a decrease moves it forward slightly. The
-    opposite is true for $\c3$ in this case; with negative spins it would instead be the same (delayed merger with
-    increase in $c3$).}
+    opposite is true for $\c3$ in this case; with negative spins it would instead be the same (i.e.,
+    an increase in $\c3$ would delay the merger in that case).}
+\end{figure*}
+
+\begin{figure*}
+    \includegraphics[width=0.49\textwidth]{figs/delta_a6c_-100.0_30.0.png}
+    \includegraphics[width=0.49\textwidth]{figs/delta_a6c_-100.0_30.0_dyn.png}
+    \caption{Effect of the variation of $a_6^{\rm c}$ on the $(2,2)$ mode real part and frequency (left) and the
+    orbital dynamics (right), for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. \ac{nqc} corrections are not
+    applied here.
+    Waveforms here are aligned so they always start at $t = 0$, to better appreciate the cumulative effect of the
+    deformed dynamics. Compared to Fig.~\ref{fig:a6c3}, $a_6^c$ here takes values in a much larger interval,
+    only leading to pathological results when the misshaped potential $A$ leads to unphysical late dynamics.}
 \end{figure*}
 
 \begin{figure*}
