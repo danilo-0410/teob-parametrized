@@ -42,3 +42,22 @@ To run a PE, simply setup the environment as above, modify the `accounting-user`
 bilby_pipe config.ini
 ```
 And follow the further instructions.
+
+You should constantly monitor your run. To do so, periodically take a look under the *out file in `<your-analysis-dir>/log_data_analysis/`:
+```bash
+tail <your-analysis-dir>/log_data_analysis/*out
+```
+Your output will be like:
+```bash
+94553it [15 days, 20:57:15 bound:5686 nc:4970 ncall:1.1e+08 eff:0.1% logz-ratio=1697.74+/-0.14 dlogz:0.100>0.1]
+```
+This is `dynesty`'s output. The most important parameters here are `logz-ratio` and `dlog`. The former is the ratio of the signal vs noise evidence
+(the larger, the stronger the signal is in your data), the latter is the estimated uncertainty in the current value of log-evidence. The algorithm stops when `dlogz=0.1`
+
+Once your run is over, your final posterior samples will be stored in `<your-analysis-dir>/final_result/` in an hdf5 file.
+This file can be accessed via the usual `h5py` python library. In order to create a summary webpage, use the `make_summarypage.sh`
+script in this repo:
+```bash
+./make_summarypage <your-username> <output_path> <path-to-results-hd5f>
+```
+The result will be something like [this](https://ldas-jobs.ligo-wa.caltech.edu/~rossella.gamba/teob-parameterized/home.html) page
