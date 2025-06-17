@@ -7,7 +7,7 @@ Requirements:
 
 
 ## Setting up the environment
-On LHO:
+### LHO:
 * source the conda environment under `/home/rossella.gamba/.conda/envs/lalsuite-param-teob`
 * source the lalsuite installation under `/home/rossella.gamba/src/lalsuite-param-teob/_inst`:
 ```bash
@@ -16,6 +16,18 @@ source /home/rossella.gamba/src/lalsuite-param-teob/_inst/etc/lalsuiterc
 * export the PYTHONPATH:
 ```bash
 cd /home/rossella.gamba/src/lalsuite-param-teob/lalsimulation/python/lalsimulation
+export PYTHONPATH=$PYTHONPATH:$PWD
+```
+
+### PSU:
+* source the conda environment under `/ligo/home/ligo.org/rossella.gamba/.conda/envs/lalsuite-param-teob`
+* source the lalsuite installation under `/ligo/home/ligo.org/rossella.gamba/src/lalsuite-param-teob/_inst`:
+```bash
+source /ligo/home/ligo.org/rossella.gamba/src/lalsuite-param-teob/_inst/etc/lalsuiterc
+```
+* export the PYTHONPATH:
+```bash
+cd /ligo/home/ligo.org/rossella.gamba/src/lalsuite-param-teob/lalsimulation/python/lalsimulation
 export PYTHONPATH=$PYTHONPATH:$PWD
 ```
 
