@@ -3,11 +3,11 @@
 Requirements:
 - teobresums (parameterized branch): https://bitbucket.org/teobresums/teobresums/branch/Dali-parametrized
 - lalsuite (param teob branch): https://git.ligo.org/rossella.gamba/lalsuite-jacopo/-/tree/teobresums-dali-parameterized?ref_type=heads
-- bilby (with param teob branch): 
+- bilby (with param teob modifications): https://git.ligo.org/rossella.gamba/bilby
 
 
 ## Setting up the environment
-### LHO:
+### LHO and LLO:
 * source the conda environment under `/home/rossella.gamba/.conda/envs/lalsuite-param-teob`
 * source the lalsuite installation under `/home/rossella.gamba/src/lalsuite-param-teob/_inst`:
 ```bash
