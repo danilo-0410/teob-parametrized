@@ -7,7 +7,7 @@ Requirements:
 
 
 ## Setting up the environment
-### LHO and LLO:
+### LHO, LLO and UWM:
 * source the conda environment under `/home/rossella.gamba/.conda/envs/lalsuite-param-teob`
 * source the lalsuite installation under `/home/rossella.gamba/src/lalsuite-param-teob/_inst`:
 ```bash
