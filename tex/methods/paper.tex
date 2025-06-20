@@ -143,11 +143,12 @@
 \definecolor{dodgerblue}{rgb}{0.12, 0.56, 1.0}
 
 \newcommand{\RG}[1]{{\textcolor{dodgerblue}{{RG: #1}} }}
-\newcommand{\SN}[1]{{\textcolor{purple}{{SN: #1}} }}
+\newcommand{\JL}[1]{{\textcolor{purple}{{JL: #1}} }}
 \newcommand{\DC}[1]{{\textcolor{orange}{{DC: #1}} }}
+\newcommand{\NC}[1]{{\textcolor{magenta}{{NC: #1}} }}
 
 
-\newcommand{\todo}[1]{\textcolor{orange}{\texttt{TODO: #1}}} 
+\newcommand{\todo}[1]{\textcolor{red}{\texttt{TODO: #1}}} 
 \newcommand{\red}[1]{\textcolor{red}{#1}} 
 \newcommand{\bl}[1]{\textcolor{blue}{#1}} 
 \newcommand{\cor}[2]{\sout{#1}\textcolor{red}{#2}} 
@@ -168,17 +169,23 @@
 \begin{document}
 
 \title{Beyond-TEOBResumS}
-% \author{Danilo \surname{Chiaramello}${}^{1,2}$}
-% \author{Rossella \surname{Gamba}${}^{3,4}$}
 
-% \affiliation{${}^{1}$Dipartimento di Fisica, Universit\`a di Torino, Via P. Giuria 1, 10125 Torino, Italy}
-% \affiliation{${}^{2}$ INFN Sezione di Torino, Torino, 10125, Italy}
-% \affiliation{${}^{3}$ Institute for Gravitation \& the Cosmos, The Pennsylvania State University, University Park PA 16802, USA}
-% \affiliation{${}^{4}$ Department of Physics, University of California, Berkeley, CA 94720, USA}
+\author{Nicol\'o \surname{Cibrario}${}^{1,2}$}
+\author{Danilo \surname{Chiaramello}${}^{1,2}$}
+\author{Jacob \surname{Lange}${}^{2}$}
+%% \author{Rossella \surname{Gamba}${}^{3,4}$}
+
+\affiliation{${}^{1}$Dipartimento di Fisica, Universit\`a di Torino, Via P. Giuria 1, 10125 Torino, Italy}
+\affiliation{${}^{2}$ INFN Sezione di Torino, Torino, 10125, Italy}
+%% \affiliation{${}^{3}$ Institute for Gravitation \& the Cosmos, The Pennsylvania State University, University Park PA 16802, USA}
+%% \affiliation{${}^{4}$ Department of Physics, University of California, Berkeley, CA 94720, USA}
 
 \begin{abstract}
-Notes on the implementation and testing of \TEOBB (tentative), a version of the \TEOBResumSDali~model that includes
-deviations from a set of NR-informed quantities that have a role in waveform generation.
+\todo{Nicol\'o, Danilo, Jacob}
+\Acp{gw} from \acp{bbh} allow us to test \ac{gr} in the strong-field, large curvature regime.
+We present \TEOBB, a new parameterized \ac{bbh} model for null tests of \ac{gr}.
+\TEOBB is based on the \TEOBResumSDali model, which incorporates non-circular orbits and spin precession.
+We apply the model to both real and simulated \ac{gw} data, and show that \dots
 \end{abstract}
 
 \date{\today}
@@ -188,14 +195,16 @@ deviations from a set of NR-informed quantities that have a role in waveform gen
 \acresetall
 
 \section{Introduction}
+\todo{all}
 
-\section{The model}
+\section{\TEOBB}
+\todo{Danilo}
 
 We build upon the most recent version of the generic \ac{bbh} model \TEOBResumSDali, incorporating non-circular
-orbits and spin precession~\cite{Nagar:2024oyk, Gamba:2024cvy}. The parametrized model is constructed by
-allowing user-input deviations from a few of the NR-informed quantities that enter the dynamics or waveform
+orbits and spin precession~\cite{Nagar:2024oyk, Gamba:2024cvy, Albanesi:2025txj}. The parametrized model is constructed by
+allowing user-input deviations from a few of the \ac{nr}-informed quantities that enter the dynamics or waveform
 template. Specifically, regarding the dynamical sector and the inspiral, we consider deviations from two
-NR-calibrated parameters: $a_6^c$, an effective 6\ac{pn} coefficient entering the (resummed) gravitational
+\ac{nr}-calibrated parameters: $a_6^c$, an effective 6\ac{pn} coefficient entering the (resummed) gravitational
 potential $A(r)$, and $c_{\rm{N}^3\rm{LO}}$, a next-to-next-to-next-to-leading-order term in the spin-orbit
 part of the Hamiltonian. We use in this case additive deviations from the fitted values:
 \begin{subequations}
@@ -222,9 +231,9 @@ Concerning the waveform model, the deformations we allow are the following:
     \abhf &\rightarrow \abhf (1 + \delta \abhf)
     \end{align}
     \end{subequations}
-    The bare values used in the standard version of the model are highly accurate fits of NR data~\cite{paper}.
+    The bare values used in the standard version of the model are highly accurate fits of \ac{nr} data~\cite{paper}.
 %
-\item Deviations from the NR-fitted values of the fundamental QNM frequencies (\DC{probably shouldn't call these frequencies})
+\item Deviations from the \ac{nr}-fitted values of the fundamental QNM frequencies (\DC{probably shouldn't call these frequencies})
 $\sigma_{\ell m 0} = \alphalm0 + i \omegalm0$ of each mode. We separately allow fractional deformations of the oscillatory
 term, $\omegalm0$, and either the damping time $\taulm0$ or inverse damping time $\alphalm0 = \taulm0^{-1}$:
 \begin{subequations}
@@ -237,7 +246,7 @@ term, $\omegalm0$, and either the damping time $\taulm0$ or inverse damping time
 We require that the (inverse) damping time deviations satisfy $\delta \taulm0 > -1\  (\delta \alphalm0 > -1)$, to avoid exponentially growing
 post-merger signals.
 %
-\item For each mode, we consider deviations from NR-fitted values of the amplitude and frequency of the
+\item For each mode, we consider deviations from \ac{nr}-fitted values of the amplitude and frequency of the
 waveform at merger, defined as the peak of the (co-precessing) $(2,2)$ mode. If a waveform mode is decomposed
 as $h_{\ell m} = A_{\ell m} e^{-i \phi_{\ell m}}$ and $\omega_{\ell m} = d\phi_{\ell m}/dt$,
 \begin{subequations}
@@ -264,7 +273,7 @@ We have three different implementations:
 \item[(i)] For the $(2,2), (3,2), (4,2)$ and $(4,3)$ modes, the \ac{nqc} point is tied to the peak time of the $(2,2)$
 mode amplitude of the EOB waveform, $t_{\ell m}^{\rm NQC} = t_{A_{22}^{\rm peak}}^{EOB} + 2 + \Delta t_{\ell m}$, 
 where $t_{A_{22}^{\rm peak}}^{EOB} = t_{\Omega_{\rm orb}^{\rm peak}} - 2 - \Delta t_{\rm NQC}$, $t_{\Omega_{\rm orb}^{\rm peak}}$
-is the time when the \textit{pure} orbital frequency peaks, $\Delta t_{\rm NQC} = 1$, and $\Delta t_{\ell m}$ is an NR-fitted parameter
+is the time when the \textit{pure} orbital frequency peaks, $\Delta t_{\rm NQC} = 1$, and $\Delta t_{\ell m}$ is an \ac{nr}-fitted parameter
 encoding the delay between the peak of a generic mode $(\ell, m)$ with respect to the $(2,2)$ mode.
 The NQC extraction point thus falls in the post-merger part of the waveform, where the ringdown
 template is valid; so, the amplitude, frequency and their derivatives can be computed by evaluating the
@@ -272,9 +281,9 @@ template at the appropriate time. This means that \textit{the merger time deviat
 quantities}. This is desireable, as it means that the \ac{nqc} corrections will enforce a smooth connection between
 the late inspiral and the ringdown.
 \item[(ii)] For the $(5,5)$ mode, the \ac{nqc} point is located as defined above, but the \ac{nqc} quantities
-are computed through direct NR fits; in this case, the merger and NQC time deviations are completely independent.
+are computed through direct \ac{nr} fits; in this case, the merger and NQC time deviations are completely independent.
 \item[(iii)] For the $(2,1), (3,3)$ and $(4,4)$ modes, the NQC point coincides
-with the peak of the $(2,2)$ mode, $t_{\ell m}^{\rm NQC} = t_{A_{22}^{\rm peak}}^{\rm EOB}$; direct NR fits 
+with the peak of the $(2,2)$ mode, $t_{\ell m}^{\rm NQC} = t_{A_{22}^{\rm peak}}^{\rm EOB}$; direct \ac{nr} fits 
 are used in these cases as well. Here, the merger and NQC amplitude and frequency deviations actually affect
 the same physical quantities, while acting independently and entering the model at (slightly) different stages.
 \end{itemize}
@@ -350,6 +359,25 @@ the same physical quantities, while acting independently and entering the model 
     \textit{Right:} Variation of $\anqc{22}$ for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. The
     deformed NQC corrections here are not matched to a similarly modified post-merger signal, causing a discontinuity.}
 \end{figure*}
+
+\section{Application to data analysis}
+\todo{Anyone who ran stuff, so Nic and Jake? }
+
+\subsection{\ac{gw} \ac{pe}}
+\todo{Quick recap of bayesian inference for GW}
+\todo{Discuss settings for the \ac{pe} runs, e.g. sampler, priors, etc.}
+
+\subsection{Model injections}
+\RG{We may keep or nuke this section, depending on whether we want to. It is not strictly necessary,
+but it does show that the model is same (and we could potentially discuss degeneracies among the deviation parameters,
+e.g. final mass and spin vs damping time etc)}
+
+\subsection{\ac{nr} injections}
+
+\subsection{Real data}
+
+\section{Conclusion}
+\todo{all}
 
 \bibliography{refs, local}
 
