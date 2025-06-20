@@ -1,7 +1,7 @@
 # make sure to use bash on Debian/Ubuntu, not dash
 SHELL := /bin/bash
 
-SRC = notes
+SRC = paper
 
 FIGURES = 
 
