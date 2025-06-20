@@ -1,3 +1,6 @@
 [submodule "dat/Boson-star-waveforms"]
 	path = dat/Boson-star-waveforms
 	url = git@github.com:tamaraevst/Boson-star-waveforms.git
+[submodule "dat/BeyondGRAnalysis"]
+	path = dat/BeyondGRAnalysis
+	url = git@github.com:mariaokounkova/BeyondGRAnalysis.git
