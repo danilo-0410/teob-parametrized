@@ -10,22 +10,24 @@ import re
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--par',               type=str,   help='Parameter to shift', required=True)
-    parser.add_argument('--min',               type=float, help='Minimum value',      required=True)
-    parser.add_argument('--max',               type=float, help='Maximum value',      required=True)
-    parser.add_argument('--dp',                type=float, help='Step',               default=None)
-    parser.add_argument('--np',                type=int,   help='Number of values',   default=None)
-    parser.add_argument('--q',                 type=float, help='Mass ratio',         default=1.)
-    parser.add_argument('--chi',               type=float, help='Spin',               default=0.)
-    parser.add_argument('--chi1',                          help='Spin 1',             default=None)
-    parser.add_argument('--chi2',                          help='Spin 2',             default=None)
-    parser.add_argument('--f0',                type=float, help='Initial frequency',  default=0.004)
-    parser.add_argument('--ecc',               type=float, help='Eccentricity',       default=0.)
-    parser.add_argument('-lb2', '--LambdaBl2', type=float, help='LambdaBl2',          default=0.)
-    parser.add_argument('--real',                          help='Plot real part',     action='store_true')
-    parser.add_argument('--dyn',                           help='Plot dynamics',      action='store_true')
-    parser.add_argument('--align',             type=str,   help='Where to align',     default='peak')
-    parser.add_argument('--save',                          help='Save figure?',       action='store_true')
+    parser.add_argument('--par',               type=str,   help='Parameter to shift',  required=True)
+    parser.add_argument('--min',               type=float, help='Minimum value',       required=True)
+    parser.add_argument('--max',               type=float, help='Maximum value',       required=True)
+    parser.add_argument('--dp',                type=float, help='Step',                default=None)
+    parser.add_argument('--np',                type=int,   help='Number of values',    default=None)
+    parser.add_argument('--q',                 type=float, help='Mass ratio',          default=1.)
+    parser.add_argument('--chi',               type=float, help='Spin',                default=0.)
+    parser.add_argument('--chi1',                          help='Spin 1',              default=None)
+    parser.add_argument('--chi2',                          help='Spin 2',              default=None)
+    parser.add_argument('--f0',                type=float, help='Initial frequency',   default=0.004)
+    parser.add_argument('--ecc',               type=float, help='Eccentricity',        default=0.)
+    parser.add_argument('-lb2', '--LambdaBl2', type=float, help='LambdaBl2',           default=0.)
+    parser.add_argument('--real',                          help='Plot real part',      action='store_true')
+    parser.add_argument('--dyn',                           help='Plot dynamics',       action='store_true')
+    parser.add_argument('--align',             type=str,   help='Where to align',      default='peak')
+    parser.add_argument('--save',                          help='Save figure?',        action='store_true')
+    parser.add_argument('--hide',                          help='Do not show figures', action='store_true')
+    parser.add_argument('--nqc',                           help='No NQCs',             action='store_false')
 
     args = parser.parse_args()
 
@@ -77,7 +79,7 @@ if __name__=='__main__':
                         chi1x=chi1[0], chi1y=chi1[1], chi1z=chi1[2],
                         chi2x=chi2[0], chi2y=chi2[1], chi2z=chi2[2],
                         f0=args.f0, ecc=args.ecc, use_mode_lm=modesvec,
-                        LambdaBl2=args.LambdaBl2, use_nqc=True)
+                        LambdaBl2=args.LambdaBl2, use_nqc=args.nqc)
     
     if args.dp is not None and args.np is not None:
         raise ValueError("Specify only one of dp and np!")
@@ -178,4 +180,5 @@ if __name__=='__main__':
         fig.savefig(f'figs/{args.par}_{args.min}_{args.max}.png')
         if args.dyn:
             fid.savefig(f'figs/{args.par}_{args.min}_{args.max}_dyn.png')
-    plt.show()
+    if not args.hide:
+        plt.show()
