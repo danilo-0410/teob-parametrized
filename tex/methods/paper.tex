@@ -163,6 +163,7 @@
 \newcommand{\amrg}[1]{{A_{#1}^{\rm mrg}}}
 \newcommand{\anqc}[1]{{A_{#1}^{\rm NQC}}}
 \newcommand{\omgmrg}[1]{{\omega_{#1}^{\rm mrg}}}
+\newcommand{\dali}[0]{\texttt{TEOBResumS-Dalí}}
 
 \interfootnotelinepenalty=10000
 
@@ -184,7 +185,7 @@
 \todo{Nicol\'o, Danilo, Jacob}
 \Acp{gw} from \acp{bbh} allow us to test \ac{gr} in the strong-field, large curvature regime.
 We present \TEOBB, a new parameterized \ac{bbh} model for null tests of \ac{gr}.
-\TEOBB is based on the \TEOBResumSDali model, which incorporates non-circular orbits and spin precession.
+\TEOBB is based on the \TEOBResumSDali~model, which incorporates non-circular orbits and spin precession.
 We apply the model to both real and simulated \ac{gw} data, and show that \dots
 \end{abstract}
 
@@ -199,27 +200,43 @@ We apply the model to both real and simulated \ac{gw} data, and show that \dots
 
 \section{\TEOBB}
 \todo{Danilo}
+\DC{Shift things around to have a (brief) default Dali model description followed by details on the deviations.}
 
 We build upon the most recent version of the generic \ac{bbh} model \TEOBResumSDali, incorporating non-circular
 orbits and spin precession~\cite{Nagar:2024oyk, Gamba:2024cvy, Albanesi:2025txj}. The parametrized model is constructed by
 allowing user-input deviations from a few of the \ac{nr}-informed quantities that enter the dynamics or waveform
-template. Specifically, regarding the dynamical sector and the inspiral, we consider deviations from two
+template. 
+
+Regarding the dynamical sector and the inspiral, we consider deviations from two
 \ac{nr}-calibrated parameters: $a_6^c$, an effective 6\ac{pn} coefficient entering the (resummed) gravitational
 potential $A(r)$, and $c_{\rm{N}^3\rm{LO}}$, a next-to-next-to-next-to-leading-order term in the spin-orbit
-part of the Hamiltonian. We use in this case additive deviations from the fitted values:
+part of the Hamiltonian~\cite{Damour:2014sva,Nagar:2023zxh,Nagar:2024oyk}. These high-order terms are
+determined in \TEOBResumSDali~by finding optimal values that produce good time-domain phase agreement
+during the inspiral between model and numerical waveforms for a representative sample of systems,
+and fitting them as functions of $\nu$ and, in the case of $\c3$, of the spins $\chi_{1,2}$;
+the calibration procedure is described in detail in~\cite{Nagar:2024oyk}.
+We use in this case additive deviations from the fitted values:
 \begin{subequations}
 \begin{align}
 a_6^c &\rightarrow a_6^c + \delta a_6^c \\
 \c3 &\rightarrow \c3 + \delta \c3 \, .
 \end{align}
 \end{subequations}
+Figs.~\ref{fig:a6c3} displays the effect of these deviations on the waveform for a sample equal-mass, spinning system.
+The model appears to be sensitive to even rather modest deviations from calibrated coefficients, especially
+when increasing $a_6^c$. Inspecting the underlying dynamics shows that much of this is actually due to
+the delicate computation of the \ac{nqc} corrections failing; wider ranges in both parameters would be
+supported by the dynamical model alone. As shown in Fig.~\ref{fig:a6c3_nqc}, only a large increase in $a_6^c$
+leads to unphysical late behavior, because of the changing character of the resummed $A(r)$ potential, due to
+the appearance of poles in or near the physical range.
+
 Concerning the waveform model, the deformations we allow are the following:
 \begin{itemize}
     \item A shift in the otherwise fixed value of $\Delta t_{\rm NQC}$, a parameter that determines the location
     of the peak amplitude of the model waveform and that of the \ac{nqc} extraction point with respect to the
-    time when the pure orbital frequency $\Omega_{\rm orb}$ reaches a final peak. This parameter is set
-    to $\Delta t_{\rm NQC} = 1M$ in the model, roughly extrapolating from the test-mass result. The implemented
-    deviation is additive:
+    time when the pure orbital frequency $\Omega_{\rm orb}$ reaches a final peak~\cite{Damour:2014sva,Nagar:2024oyk}.
+    This parameter is set to $\Delta t_{\rm NQC} = 1M$ in the model, roughly extrapolating from the test-mass result.
+    The implemented deviation is additive:
     \begin{equation}
     \Delta t_{\rm NQC} \rightarrow \Delta t_{\rm NQC} + \delta \Delta t_{\rm NQC}
     \end{equation}
@@ -231,11 +248,15 @@ Concerning the waveform model, the deformations we allow are the following:
     \abhf &\rightarrow \abhf (1 + \delta \abhf)
     \end{align}
     \end{subequations}
-    The bare values used in the standard version of the model are highly accurate fits of \ac{nr} data~\cite{paper}.
+    The bare values used in the standard version of \dali~are highly accurate fits of \ac{nr}
+    data~\cite{Jimenez-Forteza:2016oae}. The modified parameter $\abhf$ is constrained to satisfy
+    $|\abhf| < 1$, to avoid extremal and over-extremal \acp{bh}.\footnote{Note that $\abhf$ is defined
+    as the dimensionless, mass-rescaled spin of the remnant, so that $S_{\rm BH}^{f} = (\mbhf)^2 \abhf$.}
 %
-\item Deviations from the \ac{nr}-fitted values of the fundamental QNM frequencies (\DC{probably shouldn't call these frequencies})
-$\sigma_{\ell m 0} = \alphalm0 + i \omegalm0$ of each mode. We separately allow fractional deformations of the oscillatory
-term, $\omegalm0$, and either the damping time $\taulm0$ or inverse damping time $\alphalm0 = \taulm0^{-1}$:
+\item Deviations from the fundamental QNM parameters $\sigma_{\ell m 0} = \alphalm0 + i \omegalm0$ of each
+mode. The default values of the $\sigma_{\ell m 0}$ are fits of numerically computed values,
+described in~\cite{Nagar:2019wds}. For any mode, we separately allow fractional deformations of the frequency,
+$\omegalm0$, and either the damping time $\taulm0$ or inverse damping time $\alphalm0 = \taulm0^{-1}$:
 \begin{subequations}
 \begin{align}
 \alphalm0 &\rightarrow \alphalm0 (1 + \delta \alphalm0) \\
@@ -243,8 +264,11 @@ term, $\omegalm0$, and either the damping time $\taulm0$ or inverse damping time
 \omegalm0 &\rightarrow \omegalm0 (1 + \delta \omegalm0)
 \end{align}
 \end{subequations}
-We require that the (inverse) damping time deviations satisfy $\delta \taulm0 > -1\  (\delta \alphalm0 > -1)$, to avoid exponentially growing
-post-merger signals.
+We avoid exponentially growing post-merger amplitudes by requiring that the (inverse) damping time
+deviations satisfy $\delta \taulm0 > -1\  (\delta \alphalm0 > -1)$. Any modification of the damping time
+of the fundamental QNM is consistently carried over to the difference $\alpha_{\ell m}^{21} = 
+\alpha_{\ell m 1} - \alphalm0$ that enters the phenomenological ringdown model~\cite{Damour:2014sva,
+Nagar:2019wds,Nagar:2019pcj}.
 %
 \item For each mode, we consider deviations from \ac{nr}-fitted values of the amplitude and frequency of the
 waveform at merger, defined as the peak of the (co-precessing) $(2,2)$ mode. If a waveform mode is decomposed
@@ -266,8 +290,9 @@ x &\in \{A, \dot{A}, \omega, \dot{\omega}\} \, .
 \end{subequations}
 \end{itemize}
 %
-A note on the NQC point deviations: currently the location of the \ac{nqc} point in \TEOBResumSDali~differs between modes. 
-We have three different implementations:
+A note on the NQC point deviations: currently both the location of the \ac{nqc} point and the determination
+of the relevant waveform quantities at that time in \TEOBResumSDali~differ between modes.
+We have three different default behaviors:
 \begin{itemize}
 
 \item[(i)] For the $(2,2), (3,2), (4,2)$ and $(4,3)$ modes, the \ac{nqc} point is tied to the peak time of the $(2,2)$
@@ -278,22 +303,27 @@ encoding the delay between the peak of a generic mode $(\ell, m)$ with respect t
 The NQC extraction point thus falls in the post-merger part of the waveform, where the ringdown
 template is valid; so, the amplitude, frequency and their derivatives can be computed by evaluating the
 template at the appropriate time. This means that \textit{the merger time deviations also influence the NQC time
-quantities}. This is desireable, as it means that the \ac{nqc} corrections will enforce a smooth connection between
-the late inspiral and the ringdown.
+quantities}. This is desireable, as it means that the \ac{nqc} corrections will (attempt to) enforce a smooth
+connection between the late inspiral and the ringdown.
 \item[(ii)] For the $(5,5)$ mode, the \ac{nqc} point is located as defined above, but the \ac{nqc} quantities
 are computed through direct \ac{nr} fits; in this case, the merger and NQC time deviations are completely independent.
 \item[(iii)] For the $(2,1), (3,3)$ and $(4,4)$ modes, the NQC point coincides
 with the peak of the $(2,2)$ mode, $t_{\ell m}^{\rm NQC} = t_{A_{22}^{\rm peak}}^{\rm EOB}$; direct \ac{nr} fits 
-are used in these cases as well. Here, the merger and NQC amplitude and frequency deviations actually affect
-the same physical quantities, while acting independently and entering the model at (slightly) different stages.
+are used in these cases as well.
 \end{itemize}
 
-\subsection{Visualizing the effect of the deviations}
+In each case, the reasoning behind the different choices is that they were found to lead to better comparisons
+with \ac{nr} waveforms. This however causes discontinuities in the waveforms generated by the parametrized
+model when changing the NQC point quantities for any mode, or the merger amplitude or frequency for the
+multipoles in cases (ii) and (iii) above (see Fig.~\ref{fig:bad_dev_mrgnqc}). 
+To partially limit these pathologies, we edit the default model behavior by computing the NQC point
+parameters from the post-merger template for any mode $(\ell, m)$ for which either
+$\delta \amrg{\ell m} \neq 0$ or $\delta \omgmrg{\ell m} \neq 0$.
 
 \begin{figure*}
     \includegraphics[width=0.49\textwidth]{figs/delta_a6c_-8.0_8.0.png}
     \includegraphics[width=0.49\textwidth]{figs/delta_cN3LO_-10.0_10.0.png}
-    \caption{\label{fig:a6c3}
+    \caption{\label{fig:a6c3} \DC{Fix y labels to real part}
     Effect of the variation of $a_6^{\rm c}$ and $\c3$ on the $(2,2)$ mode real part and frequency
     for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. Waveforms here are aligned so they always start at $t = 0$,
     to better appreciate the cumulative effect of the deformed dynamics. $\delta a_6^c$ and $\delta \c3$ cause a slightly
@@ -310,7 +340,8 @@ the same physical quantities, while acting independently and entering the model 
 \begin{figure*}
     \includegraphics[width=0.49\textwidth]{figs/delta_a6c_-100.0_30.0.png}
     \includegraphics[width=0.49\textwidth]{figs/delta_a6c_-100.0_30.0_dyn.png}
-    \caption{Effect of the variation of $a_6^{\rm c}$ on the $(2,2)$ mode real part and frequency (left) and the
+    \caption{\label{fig:a6c3_nqc} \DC{Fix y labels to real part}
+    Effect of the variation of $a_6^{\rm c}$ on the $(2,2)$ mode real part and frequency (left) and the
     orbital dynamics (right), for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. \ac{nqc} corrections are not
     applied here.
     Waveforms here are aligned so they always start at $t = 0$, to better appreciate the cumulative effect of the
@@ -329,7 +360,7 @@ the same physical quantities, while acting independently and entering the model 
 \end{figure*}
 
 \begin{figure*}
-    \includegraphics[width=0.49\textwidth]{figs/delta_abhf_-0.9_0.2.png}
+    \includegraphics[width=0.49\textwidth]{figs/delta_abhf_-0.9_0.16.png}
     \includegraphics[width=0.49\textwidth]{figs/delta_Mbhf_-0.5_1.0.png}
     \caption{Effect of the variation of $\mbhf$ and $\abhf$ on the $(2,2)$ mode amplitude and frequency
     for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. Waveforms here are aligned so that for each
@@ -352,10 +383,13 @@ the same physical quantities, while acting independently and entering the model 
 \begin{figure*}
     \includegraphics[width=0.49\textwidth]{figs/delta_A21_mrg_-0.8_1.0.png}
     \includegraphics[width=0.49\textwidth]{figs/delta_A22_nqc_-0.8_1.0.png}
-    \caption{\textit{Left:} Effect of the variation of $\amrg{21}$ on the $(2,1)$ mode of the waveform
+    \caption{\label{fig:bad_dev_mrgnqc}
+    \textit{Left:} Effect of the variation of $\amrg{21}$ on the $(2,1)$ mode of the waveform
     for a binary with $q = 2, \chi_1 = \chi_2 = 0.6$.
-    For this multipole, the NQC point quantities are computed from a dedicated fit, with no direct link
-    with the post-merger model, so the inspiral part does not link up smoothly with the ringdown.
+    For this multipole, the NQC point quantities are computed from the post-merger model, instead of using
+    dedicated fits as would be default in \dali. This way, the inspiral part of the waveform is
+    consistently deformed as well so as to link up more smoothly with the ringdown (with varying outcomes).
+    \DC{Check frequency in left plot}
     \textit{Right:} Variation of $\anqc{22}$ for a binary with $q = 1, \chi_1 = \chi_2 = 0.6$. The
     deformed NQC corrections here are not matched to a similarly modified post-merger signal, causing a discontinuity.}
 \end{figure*}
@@ -369,7 +403,7 @@ the same physical quantities, while acting independently and entering the model 
 
 \subsection{Model injections}
 \RG{We may keep or nuke this section, depending on whether we want to. It is not strictly necessary,
-but it does show that the model is same (and we could potentially discuss degeneracies among the deviation parameters,
+but it does show that the model is sane (and we could potentially discuss degeneracies among the deviation parameters,
 e.g. final mass and spin vs damping time etc)}
 
 \subsection{\ac{nr} injections}
