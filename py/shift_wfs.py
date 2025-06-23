@@ -150,7 +150,10 @@ if __name__=='__main__':
         any_ax.set_xlim([-125 + (tp[0] - t[0]), 75 + (tp[0] - t[0])])
     for any_ax in ax[1, :]:
         any_ax.set_xlabel(r'$t/M$')
-    ax[0, 0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))
+    if args.real:
+        ax[0, 0].set_ylabel(r'$\Re h_{{{}{}}}$'.format(l, m))
+    else:
+        ax[0, 0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))
     ax[1, 0].set_ylabel(r'$\omega_{{{}{}}}$'.format(l, m))
 
     if args.dyn:
