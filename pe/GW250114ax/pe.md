@@ -4,7 +4,7 @@
 |---       |---       |---           |
 | GR Non-eccentric Aligned | UWM: `/home/koustav.chandra/projects/o4/s250114ax/teobresums/teobresums-non-eccentric-aligned/` |
 | GR Non-eccentric Precessing | `/home/koustav.chandra/projects/o4/s250114ax/teobresums/teobresums-non-eccentric-precessing`| 
-
+| GR eccentric Aligned | `/home/rossella.gamba/projects/teob-parameterized/pe/GW250114ax/eccentric-aligned`|
 
 # Submitting runs
 ---
