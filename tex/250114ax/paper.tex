@@ -1,0 +1,203 @@
+\documentclass[prd,amssymb,amsmath,amsfonts,nofootinbib,reprint,showpacs,longbibliography]{revtex4-1}
+
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage[colorlinks]{hyperref}
+\usepackage[table]{xcolor}
+\usepackage{multirow}
+\usepackage[normalem]{ulem}
+\usepackage{lipsum}
+
+\usepackage{marvosym}
+\usepackage{enumerate}
+\usepackage{color,soul}
+\usepackage{acronym}
+
+\usepackage{bm}
+\usepackage{color}
+\usepackage{commath}
+\allowdisplaybreaks
+\usepackage{multirow}
+
+\def\lm{{\ell m}}
+\newcommand{\avg}[1]{\rangle{#1}\langle}
+\newcommand{\scri}{{\mathrsfs{I}}}
+\newcommand{\stf}[1]{{\langle {#1} \rangle}}
+\newcommand{\ord}{\mathcal{O}}
+\newcommand{\f}{\frac}
+\newcommand{\gsf}{\text{1GSF}}
+\newcommand{\bk}{\text{0GSF}}
+\newcommand{\el}{\ell}
+\newcommand{\nn}{\nonumber}
+\newcommand{\mbf}[1]{\mathbf{#1}}
+\newcommand{\LOhat}{\!\hat{\,\mathbf{L}}_0}
+\newcommand{\Lhat}{\!\hat{\,\mathbf{L}}_\text{N}}
+\newcommand{\Jhat}{\hat{\mathbf{J}}_\text{N}}
+\newcommand{\Sa}{\mbf{S}_1}
+\newcommand{\Sb}{\mbf{S}_2}
+\newcommand{\hs}{\hat{s}}
+\newcommand{\hS}{\hat{S}}
+\newcommand{\Lhatdot}{\dot{\hat{\,\mathbf{L}}}_\text{N}}
+\newcommand{\LhatdotNew}{\dot{\hat{\,\mathbf{L}}}_{\text{N},\perp}}
+\newcommand{\Sadot}{\dot{\mbf{S}}_1}
+\newcommand{\Sbdot}{\dot{\mbf{S}}_2}
+\newcommand{\Jdot}{\dot{\mbf{J}}}
+\newcommand{\rdot}{\dot{\mbf{r}}}
+\newcommand{\vdot}{\dot{\mbf{v}}}
+\newcommand{\ud}{\mathrm{d}}
+\newcommand{\Ldot}{\dot{\mbf{L}}_{\text N}}
+\newcommand{\LN}{\mbf{L}_{\text N}}
+\newcommand{\nnm}{\nonumber}
+\newcommand{\mce}{\mathcal{E}}
+\newcommand{\mcb}{\mathcal{B}}
+
+\def\TEOBResumS{\texttt{TEOBResumS}}
+\def\TEOBResumSGIOTTO{\texttt{TEOBResumSGIOTTO}}
+\def\TEOBResumSecce{\texttt{TEOBResumSecce}}
+\def\bajes{\texttt{bajes}}
+\def\Boldtheta{\boldsymbol{\theta}}
+\def\Boldd{\textbf{d}}
+\def\TEOBResumSDali{\texttt{TEOBResumS-Dalí}}
+\def\TEOBB{\texttt{Beyond-TEOBResumS}}
+\def\c3{c_{\rm{N}^3\rm{LO}}}
+\def\mbhf{M_{\rm BH}^f}
+\def\abhf{a_{\rm BH}^f}
+\def\alphalm0{\alpha_{\ell m 0}}
+\def\taulm0{\tau_{\ell m 0}}
+\def\omegalm0{\omega_{\ell m 0}}
+
+
+% Define capitalized acronyms
+\newacro{adm}[ADM]{Arnowitt-Deser-Misner}
+\newacro{bbh}[BBH]{binary black hole}
+% \newacroplural{bbh}[BBHs]{binary black holes}
+\newacro{bh}[BH]{black hole}
+\newacroplural{bh}[BHs]{black holes}
+\newacro{bhns}[BHNS]{black hole-neutron star}
+\newacro{bhpt}[BHPT]{black hole perturbation theory}
+\newacro{bns}[BNS]{binary neutron star}
+\newacro{bf}[BF]{Bayes' factor}
+\newacro{cbc}[CBC]{compact binary coalescence}
+\newacro{ce}[CE]{Cosmic Explorer}
+\newacro{da}[DA]{data analysis}
+\newacro{et}[ET]{Einstein Telescope}
+\newacro{eob}[EOB]{Effective-One-Body}
+\newacro{eom}[EOM]{equations of motion}
+\newacro{fd}[FD]{frequency domain}
+\newacro{fft}[FFT]{Fast Fourier transform}
+\newacro{gw}[GW]{gravitational-wave}
+\newacroplural{gw}[GWs]{Gravitational-waves}
+\newacro{gr}[GR]{general relativity}
+\newacro{grb}[GRB]{gamma-ray burst}
+\newacro{grhd}[GRHD]{general-relativistic hydrodynamics}
+\newacro{gwosc}[GWOSC]{Gravitational Wave Open Science Center}
+\newacro{gwtc1}[GWTC-1]{the first gravitational-wave transients catalog}
+\newacro{gsf}[GSF]{Gravitational Self Force}
+\newacro{hm}[HM]{Higher mode}
+\newacroplural{hm}[HMs]{Higher modes}
+\newacro{ifo}[IFO]{interferometer}
+\newacro{imr}[IMR]{inspiral-merger-ringdown}
+\newacro{im}[IMR]{inspiral-to-merger}
+\newacro{kagra}[KAGRA]{Kamioka Gravitational Wave Detector}
+\newacro{ligo}[LIGO]{Laser Interferometer Gravitational-Wave Observatory}
+\newacro{lisa}[LISA]{Laser Interferometer Space Antenna}
+\newacro{lr}[LR]{Light Ring}
+\newacro{lso}[LSO]{Last Stable Orbit}
+\newacro{lvc}[LVC]{LIGO-Virgo Collaboration}
+\newacro{lvk}[LVK]{LIGO-Virgo-Kagra Collaboration}
+\newacro{lo}[LO]{leading order}
+\newacro{ns}[NS]{neutron star}
+\newacroplural{ns}[NSs]{neutron stars}
+\newacro{nr}[NR]{numerical relativity}
+\newacro{nqc}[NQC]{Next-to-quasicircular corrections}
+\newacro{nlo}[NLO]{next-to-leading order}
+\newacro{nnlo}[NNLO]{next-to-next-to-leading order}
+\newacro{n3lo}[N3LO]{next-to-next-to-next-to-leading order}
+\newacro{n4lo}[N3LO]{next-to-next-to-next-to-next-to-leading order}
+\newacro{ode}[ODE]{Ordinary Differential Equation}
+\newacroplural{ode}[ODEs]{Ordinary Differential Equations}
+\newacro{pn}[PN]{post-Newtonian}
+\newacro{pm}[PM]{post-Minkowskian}
+\newacro{pe}[PE]{parameter estimation}
+\newacro{psd}[PSD]{power spectral density}
+\newacro{pa}[PA]{post-adiabatic}
+\newacro{qnm}[QNM]{quasi-normal mode}
+\newacro{qc}[QC]{quasi-circular}
+\newacro{snr}[SNR]{signal-to-noise ratio}
+\newacro{spa}[SPA]{stationary-phase approximation}
+\newacro{sxs}[SXS]{Simulating eXtreme Spacetimes}
+\newacro{td}[TD]{time domain}
+\newacro{ng}[NG]{Nect Generation}
+
+
+\definecolor{cyan}{rgb}{0,0.9,0.9}
+\definecolor{orange}{rgb}{0.9,0.5,0}
+\definecolor{magenta}{rgb}{1,0,1}
+\definecolor{purple}{rgb}{0.8,0.4,0.8}
+\definecolor{gray}{rgb}{0.8242,0.8242,0.8242}
+\definecolor{dodgerblue}{rgb}{0.12, 0.56, 1.0}
+
+\newcommand{\RG}[1]{{\textcolor{dodgerblue}{{RG: #1}} }}
+\newcommand{\KC}[1]{{\textcolor{purple}{{KC: #1}} }}
+\newcommand{\DC}[1]{{\textcolor{orange}{{DC: #1}} }}
+
+
+\newcommand{\todo}[1]{\textcolor{orange}{\texttt{TODO: #1}}} 
+\newcommand{\red}[1]{\textcolor{red}{#1}} 
+\newcommand{\bl}[1]{\textcolor{blue}{#1}} 
+\newcommand{\cor}[2]{\sout{#1}\textcolor{red}{#2}} 
+\newcommand{\old}[1]{\textcolor{gray}{\sout{#1}}}
+\newcommand{\new}[1]{\red{#1}}
+
+\newcommand{\eo}[0]{\hat{E}_0}
+\newcommand{\lo}[0]{\hat{L}_0}
+\newcommand{\bphi}[0]{\bar{\varphi}}
+\newcommand{\dbphi}[0]{\dot{\bar{\varphi}}}
+\newcommand{\dphi}[0]{\dot{\varphi}}
+\newcommand{\amrg}[1]{{A_{#1}^{\rm mrg}}}
+\newcommand{\anqc}[1]{{A_{#1}^{\rm NQC}}}
+\newcommand{\omgmrg}[1]{{\omega_{#1}^{\rm mrg}}}
+
+\interfootnotelinepenalty=10000
+
+\begin{document}
+
+\title{Tests of General Relativity with GW250114}
+\author{Koustav \surname{Chandra}${}^{1}$}
+\author{Rossella \surname{Gamba}${}^{1,2}$}
+\author{Danilo \surname{Chiaramello}${}^{3,4}$}
+
+
+\affiliation{${}^{1}$ Institute for Gravitation \& the Cosmos, The Pennsylvania State University, University Park PA 16802, USA}
+\affiliation{${}^{2}$ Department of Physics, University of California, Berkeley, CA 94720, USA}
+\affiliation{${}^{3}$ Dipartimento di Fisica, Universit\`a di Torino, Via P. Giuria 1, 10125 Torino, Italy}
+\affiliation{${}^{4}$ INFN Sezione di Torino, Torino, 10125, Italy}
+
+\begin{abstract}
+    We present a suite of tests of general relativity on the gravitational wave signal
+    GW250114, the loudest gravitational wave signal detected by the LIGO-Virgo-Kagra
+    collaboration to date. We do this, that and the other. We show that we are the best.
+    We also include eccentricity and precession, because we can.
+    We find that the signal is consistent with general relativity, and we rule out
+    alternative theories of gravity with a high confidence level.
+\end{abstract}
+\date{\today}
+\maketitle
+
+% reset all acronyms
+\acresetall
+
+\section{Introduction}
+
+\section{Methods}
+
+\section{Results}
+
+\section{Conclusions}
+
+\end{document}
