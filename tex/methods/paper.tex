@@ -164,6 +164,7 @@
 \newcommand{\anqc}[1]{{A_{#1}^{\rm NQC}}}
 \newcommand{\omgmrg}[1]{{\omega_{#1}^{\rm mrg}}}
 \newcommand{\dali}[0]{\texttt{TEOBResumS-Dalí}}
+\newcommand{\bilby}[0]{\texttt{bilby}}
 
 \interfootnotelinepenalty=10000
 
@@ -201,7 +202,7 @@ We apply the model to both real and simulated \ac{gw} data, and show that \dots
 \section{\dali}
 \label{sec:dali_base}
 \todo{Danilo}
-\DC{Improve text...}
+\DC{Improve text; condense drastically.}
 
 We build upon the most recent version of the generic \ac{bbh} model \TEOBResumSDali, incorporating non-circular
 orbits and spin precession~\cite{Nagar:2024oyk, Gamba:2024cvy, Albanesi:2025txj}. 
@@ -212,7 +213,7 @@ We consider a \ac{bbh} system with masses $m_1 \geq m_2$ and spin vectors $\mbf{
 m_{1,2}^2 \bm{\chi}_{1,2}$. We denote by $M$ the total mass of the system, $M = m_1 + m_2$, the mass ratio
 by $q = m_1/m_2 \geq 1$, and the symmetric mass ratio by $\nu = m_1m_2/M^2 = \mu/M$, where $\mu$ is the reduced
 mass. We split the spin vectors into components parallel, $\chi_{1,2}^{\parallel}$, and perpendicular,
-$\chi_{1,2}^{\perp}$, to the orbital angular momentum, and define the effective spin and precessing spin
+$\chi_{1,2}^{\perp}$, to the orbital angular momentum $\bm{L}$, and define the effective spin and precessing spin
 parameters by:
 \begin{subequations}
 \begin{align}
@@ -225,21 +226,15 @@ Spin effects in the orbital dynamics model are encoded in the combinations $\til
 as well as in the total spin $\hat{\bm{S}} = (\bm{S}_1 + \bm{S}_2)/M^2$ and the vector $\hat{\bm{S}}_* = 
 \left[(m_2/m_1) \bm{S}_1 + (m_1/m_2) \bm{S}_2\right]/M^2$.
 
-% EOB --> 3 ingredients: hamiltonian, waveform, rad reaction; + spin dynamics for precession
-% Don't write full Ham probably, but enough to understand where a and c enter... so all of it
-% Write factorized inspiral waveform with  no details, explain kinda ok the NQCs, write ringdown
-% template and explain parameters and whatnot.
-% For spin dynamics, refer to relevant papers, but do mention QNMs extension.
-
 \ac{eob} models are built from three main ingredients: a conservative Hamiltonian for the orbital dynamics,
 a waveform model, and radiation reaction forces that parametrize the back reaction of the latter onto the former.
 Since \dali~also covers spin precession, these are complemented by a model for the evolution of the spin
 and orbital angular momentum vectors.
 
-The \dali~Hamiltonian can be written as:
+The \dali~Hamiltonian for \ac{bbh} systems whose spins are parallel to the orbital angular momentum can be written as:
 \begin{subequations}
 \begin{align}
-H_{\rm EOB} &= M \sqrt{1 + 2 \nu \bigl(\hat{H}_{\rm eff} - 1\bigr)} \\
+H_{\rm EOB}       &= M \sqrt{1 + 2 \nu \bigl(\hat{H}_{\rm eff} - 1\bigr)} \\
 \hat{H}_{\rm eff} &= \dfrac{H_{\rm eff}}{\mu} = \hat{H}_{\rm eff}^{\rm orb} + \hat{H}_{\rm eff}^{\rm SO} \\
 \hat{H}_{\rm eff}^{\rm orb} &= \sqrt{p_{r_*}^2 + A(r) \left(1 + p_\varphi^2 u_c^2 + Q(r, p_{r_*})\right)} \\
 \hat{H}_{\rm eff}^{\rm SO}  &= \left(G_S \hat{\bm{S}} + G_{S_*} \hat{\bm{S}}_*\right) \cdot \hat{\bm{L}} \ \,
@@ -258,8 +253,44 @@ in~\cite{Nagar:2024oyk}. These are the effective 6\ac{pn} coefficient $a_6^c$ en
 represented by a fit against $\nu$, and the next-to-next-to-next-to-leading-order coefficient $c_{\rm{N}^3\rm{LO}}$
 found in both $G_S$ and $G_{S_*}$, represented as a function of $\nu, \tilde{a}_0, \tilde{a}_{12}$.
 
+The dynamical evolution of the system is governed by a modified version of Hamilton's equations,
+incorporating the radiation reaction forces:
+\begin{subequations}
+\begin{align}
+    \dot{r} &= \sqrt{\dfrac{A}{B}} \dfrac{\partial H_{\rm EOB}}{\partial p_{r_*}} \qquad 
+    \dot{\varphi} = \Omega = \dfrac{\partial H_{\rm EOB}}{\partial p_\varphi} \\
+    \dot{p}_{r_*} &= -\sqrt{\dfrac{A}{B}} \biggl(\dfrac{\partial H_{\rm EOB}}{\partial r} + \mathcal{\hat{F}}_r\biggr)\qquad 
+    \dot{p}_\varphi = \mathcal{\hat{F}}_\varphi
+\end{align}
+\end{subequations}
+$\mathcal{\hat{F}}_\varphi, \mathcal{\hat{F}}_r$ are dissipative terms that cause the system's
+energy and angular momentum to decrease over time. They are computed by invoking the balance
+between these dynamical losses by the system and the fluxes of energy and angular momentum
+carried by the emitted \ac{gw} signal at infinity and through each \ac{bh}'s horizon.
+In \dali, they are given by:
+\begin{subequations}
+\begin{align}
+    \mathcal{\hat{F}}_\varphi &= -\dfrac{32}{5} \nu r_\Omega^4 \Omega^5 \hat{f}(x) + \mathcal{\hat{F}}^{\rm H}_\varphi \\
+    \mathcal{\hat{F}}_r       &= -\dfrac{5p_{r_*}}{3p_\varphi} \mathcal{\hat{F}}_\varphi \hat{f}_{p_{r_*}}\, ,
+\end{align}
+\end{subequations}
+where $r_\Omega$ is an effective radius satisfying Kepler's third law on a circular orbit~\cite{Damour:2014sva};
+$\mathcal{\hat{F}}_{\rm H}$ is the horizon absorption contribution; and $\hat{f}_{p_{r_*}} (r)$ is 
+a resummed 2(?)\ac{pn} polynomial relating the radiation reaction components in the quasi-circular limit~\cite{}.
+The factor $\hat{f} (x)$, with $x = (r_\Omega \Omega)^2 \sim \Omega^{2/3}$, inherits the highly
+effective factorization and resummation of the waveform multipoles to describe the main dissipative
+effect of \acp{gw} on the orbit:
+\begin{equation}
+    \hat{f} (x) = \sum_{\ell = 2}^8 \sum_{m = -\ell}^{\ell} \dfrac{F_{\ell m}^{\rm Newt}}{F_{22}^{\rm Newt}}
+    |\hat{h}_{\ell m}|^2 \hat{f}_{\ell m}^{\rm noncircular}\, .
+\end{equation}
+Each multipolar contribution is rescaled by the leading $(2,2)$ mode flux prefactor, with $\hat{h}_{\ell m}$
+being the \ac{pn} waveform factor as described below. Noncircular effects in the radiation reaction
+are included through the leading, Newtonian factor $\hat{f}_{22}^{\rm noncircular}$, as prescribed
+in Refs.~\cite{Chiaramello:2020ehz,Nagar:2021xnh}.
+
 The waveform model expresses each spherical harmonic mode of the \ac{gw} strain as the product of
-several factors, in an effective resummation of \ac{pn} results:
+several factors, in an effective resummation of \ac{pn} results~\cite{??}:
 \begin{subequations}
 \begin{align}
     h          &= h_+ - i h_\times = \dfrac{1}{D_L} \sum_{\ell, m} h_{\ell m} {}_{-2}Y_{\ell m} (\iota, \phi) \\
@@ -271,9 +302,10 @@ where $D_L$ is the system's luminosity distance from the observer, $\iota, \phi$
 in the source's sky, and ${}_{-2}Y_{\ell m}$ are the spin-weighted spherical harmonics. The signal is split
 into an inspiral-plunge-merger part, completed after a suitable time $t_{\ell m}^{\rm match}$ by the post-merger
 ringdown portion $h_{\ell m}^{\rm rng}$. The inspiral waveform is computed on the orbital dynamics and
-factorized into a leading Newtonian term $h_{\ell m}^N$ and a resummed \ac{pn} factor $\hat{h}_{\ell m}$;
-the \ac{nqc} corrections $h_{\ell m}^{\rm NQC}$ are designed to help to smoothly transition from the late
-inspiral to the ringdown. The factor reads:
+factorized into a leading Newtonian term $h_{\ell m}^N$, also incorporating the dominant noncircular effects
+following Refs.~\cite{Chiaramello:2020ehz,Nagar:2021xnh,Albanesi:2021rby}, and a resummed \ac{pn} factor
+$\hat{h}_{\ell m}$~\cite{2008gu,...}; the \ac{nqc} $h_{\ell m}^{\rm NQC}$ are designed to
+help smoothly transition from the late inspiral to the ringdown. The factor reads:
 \begin{equation}
     \hat{h}_{\ell m}^{\rm NQC} = (1 + a_1^{\ell m} n_1^{\ell m} + a_2^{\ell m} n_2^{\ell m}) e^{i (b_1^{\ell m} n_3^{\ell m} + b_2^{\ell m} n_4^{\ell m})}\, ,
 \end{equation}
@@ -342,6 +374,35 @@ are computed through direct \ac{nr} fits.
 with the peak of the $(2,2)$ mode, $t_{\ell m}^{\rm NQC} = t_{A_{22}^{\rm peak}}^{\rm EOB}$; direct \ac{nr} fits 
 are used in these cases as well.
 \end{itemize}
+
+% But what about precession?
+\dali~employs the twist method to also describe systems undergoing spin precession. This happens
+when the spin and orbital angular momentum vectors are not all parallel to each other; it causes
+the orbital plane to shift as the angular momentum vectors precess, inducing oscillations in the \ac{gw}
+signal's amplitude and frequency. The twist is based on the key observation, grounded in \ac{nr}
+data, that, in a particular, non-inertial reference frame known as the \textit{co-precessing} frame,
+defined to follow the principal emission direction of a precessing system, the \ac{gw} signal
+closely resembles that produced by a spin-aligned system. This principal emission direction
+is to a good approximation that of the shifting precessing orbital angular momentum vector.
+~\cite{Schmidt:2010it,OShaughnessy:2011pmr,Schmidt:2012rh}
+Thus, \dali~can produce accurate precessing waveforms by following these steps~\cite{Gamba:2021yri,
+Akcay:2020qrj,Gamba:2024cvy}:
+(i) compute the co-precessing frame signal by employing the standard spin-aligned model described above;
+this is done particularly by only considering the components of the spin vectors in the
+direction of the orbital angular momentum. 
+\footnote{Also note that, while in general precessing waveform multipoles don't exhibit
+reflection symmetry, by which the negative-$m$ modes would be just $h_{\ell -m} = (-1)^{\ell}
+h_{\ell m}^*$, where ${}^*$ indicates complex conjugation, this property approximately
+holds in the co-precessing frame.}
+(ii) Separately evolve the precessing angular momentum vectors $\bm{\hat{S}}_{1,2}, \hat{\bm{L}}$
+using orbit-averaged \ac{pn} equations of motion. 
+Leading noncircular effects are taken into account here by using as input for these
+equations the \ac{eob} orbital frequency $\Omega$, as opposed to the pn stuff that
+was used in giotto. 
+(iii) Rotate the co-precessing waveform modes $h_{\ell m}^{\rm cp}$ into the inertial
+reference frame tied to the initial direction of the orbital angular momentum $\hat{\bm{L}}_0$. 
+This transformation is parametrized by the set of Euler angles $\alpha, \beta, \gamma$ that
+rotate $\hat{\bm{L}}$ into $\hat{\bm{L}}_0$.
 
 \section{\TEOBB}
 The parametrized model is constructed by allowing user-input deviations from a few of the \ac{nr}-informed quantities
@@ -433,9 +494,9 @@ corrections will always (attempt to) enforce a smooth connection between the lat
 This is not true for the multipoles under points (ii) and (iii), or when using deviations from the
 \ac{nqc} quantities for any mode. In these cases, the plunge-merger and ringdown waveforms are blind to each
 other's deformation, and discontinuities will appear in the complete signals (see Fig.~\ref{fig:bad_dev_mrgnqc}).
-To partially limit these pathologies, we edit the default model behavior by computing the NQC point
+\color{blue}To partially limit these pathologies, we edit the default model behavior by computing the NQC point
 parameters from the post-merger template for any mode $(\ell, m)$ for which either
-$\delta \amrg{\ell m} \neq 0$ or $\delta \omgmrg{\ell m} \neq 0$.
+$\delta \amrg{\ell m} \neq 0$ or $\delta \omgmrg{\ell m} \neq 0$.\color{black}
 \DC{This makes sense, but it seems that it might be better (i.e., it leads to smoother wfs) to just
 apply the same deviation to the NQC amplitude/frequency, at least for the 21...}
 
@@ -520,6 +581,35 @@ apply the same deviation to the NQC amplitude/frequency, at least for the 21...}
 
 \subsection{\ac{gw} \ac{pe}}
 \todo{Quick recap of bayesian inference for GW}
+
+\ac{pe} algorithms in \ac{gw} astronomy aim, given the (real or mock) detector data $d$, to estimate the
+probability distributions $p (\bm{\theta} | d)$ of the set of physical parameters $\bm{\theta}$ characterizing
+a \ac{gw} signal that best describe the data. This is achieved via Bayes' Theorem; under a certain hypothesis $H$
+for the source, the \textit{posterior} distribution is given by:
+\begin{equation}
+    p (\bm{\theta}|d, H) = \dfrac{p(\bm{\theta}) p (d | \bm{\theta}, H)}{\mathcal{Z}_H}\, .
+\end{equation}
+Here, $p(\bm{\theta})$ is the prior probability distribution of the \ac{gw} parameters, an expression of our
+a priori knowledge of the systems that generate \acp{gw}; $p(d | \bm{\theta}, H) = \mathcal{L} (\bm{\theta})$ is
+the \textit{likelihood}, a measure of the similarity of the data to the signal identified by $\bm{\theta}$ that also
+takes into account detector noise; finally, the \textit{evidence} $\mathcal{Z}_H$ is a normalization constant coinciding
+with the integrated likelihood over the source parameters, $\mathcal{Z}_H = \int d \bm{\theta} \mathcal{L} (\bm \theta)$.
+The evidence also enters the definition of the \ac{bf} $\mathcal{B}$, a useful parameter used to assess whether the data
+favors one of two alternative hypotheses for the analysis, characterized by different sets of physical parameters and
+priors, and how significantly. Given two scenarios labeled 1 and 2,
+\begin{equation}
+    \mathcal{B}^1_2 = \dfrac{\mathcal{Z}_1}{\mathcal{Z}_2}\, .
+\end{equation}
+\DC{Are we even using the bayes factor for anything?}
+
+We employ the \bilby~package~\cite{Ashton:2018jfp} and the nested sampling algorithm \texttt{dynesty}~\cite{Speagle:2020}
+to evaluate the posteriors. We use a Gaussian noise-likelihood function:
+\begin{equation}
+    \ln \mathcal{L} (\bm{\theta}) = -\dfrac{1}{2} \sum_k \biggl[ \biggl( \dfrac{d_k - h_k(\bm{\theta})}{\sigma_k} \biggr)^2 + \ln (2 \pi \sigma_k^2)\biggr]\, ,
+\end{equation}
+where $k$ labels a frequency bin, $d_k$ is the detector strain data, $h_k (\bm{\theta})$ the model waveform, 
+and $\sigma_k$ the detector noise spectral density.
+
 \todo{Discuss settings for the \ac{pe} runs, e.g. sampler, priors, etc.}
 
 \subsection{Model injections}
