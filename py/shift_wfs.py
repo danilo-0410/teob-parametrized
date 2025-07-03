@@ -10,24 +10,25 @@ import re
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--par',               type=str,   help='Parameter to shift',  required=True)
-    parser.add_argument('--min',               type=float, help='Minimum value',       required=True)
-    parser.add_argument('--max',               type=float, help='Maximum value',       required=True)
-    parser.add_argument('--dp',                type=float, help='Step',                default=None)
-    parser.add_argument('--np',                type=int,   help='Number of values',    default=None)
-    parser.add_argument('--q',                 type=float, help='Mass ratio',          default=1.)
-    parser.add_argument('--chi',               type=float, help='Spin',                default=0.)
-    parser.add_argument('--chi1',                          help='Spin 1',              default=None)
-    parser.add_argument('--chi2',                          help='Spin 2',              default=None)
-    parser.add_argument('--f0',                type=float, help='Initial frequency',   default=0.004)
-    parser.add_argument('--ecc',               type=float, help='Eccentricity',        default=0.)
-    parser.add_argument('-lb2', '--LambdaBl2', type=float, help='LambdaBl2',           default=0.)
-    parser.add_argument('--real',                          help='Plot real part',      action='store_true')
-    parser.add_argument('--dyn',                           help='Plot dynamics',       action='store_true')
-    parser.add_argument('--align',             type=str,   help='Where to align',      default='peak')
-    parser.add_argument('--save',                          help='Save figure?',        action='store_true')
-    parser.add_argument('--hide',                          help='Do not show figures', action='store_true')
-    parser.add_argument('--nqc',                           help='No NQCs',             action='store_false')
+    parser.add_argument('--par',               type=str,   help='Parameter to shift',             required=True)
+    parser.add_argument('--min',               type=float, help='Minimum value',                  required=True)
+    parser.add_argument('--max',               type=float, help='Maximum value',                  required=True)
+    parser.add_argument('--dp',                type=float, help='Step',                           default=None)
+    parser.add_argument('--np',                type=int,   help='Number of values',               default=None)
+    parser.add_argument('--q',                 type=float, help='Mass ratio',                     default=1.)
+    parser.add_argument('--chi',               type=float, help='Spin',                           default=0.)
+    parser.add_argument('--chi1',                          help='Spin 1',                         default=None)
+    parser.add_argument('--chi2',                          help='Spin 2',                         default=None)
+    parser.add_argument('--f0',                type=float, help='Initial frequency',              default=0.004)
+    parser.add_argument('--ecc',               type=float, help='Eccentricity',                   default=0.)
+    parser.add_argument('-lb2', '--LambdaBl2', type=float, help='LambdaBl2',                      default=0.)
+    parser.add_argument('--real',                          help='Plot real part',                 action='store_true')
+    parser.add_argument('--dyn',                           help='Plot dynamics',                  action='store_true')
+    parser.add_argument('--align',             type=str,   help='Where to align',                 default='peak')
+    parser.add_argument('--save',                          help='Save figure?',                   action='store_true')
+    parser.add_argument('--hide',                          help='Do not show figures',            action='store_true')
+    parser.add_argument('--nqc',                           help='No NQCs',                        action='store_false')
+    parser.add_argument('--tlim',              type=float, help='t limit before merger for plot', default=225.)
 
     args = parser.parse_args()
 
@@ -100,11 +101,12 @@ if __name__=='__main__':
     matplotlib.rcParams['text.usetex'] = True
     matplotlib.rcParams['font.size'] = 15
 
-    fig, ax = plt.subplots(2, 2, layout='constrained', sharex='col', figsize=(10, 7), width_ratios=(1, 1))
+    fig, ax = plt.subplots(2, 1, layout='constrained', sharex='col', figsize=(8, 7))
     if args.dyn:
-        fid, ad = plt.subplots(2, 2, layout='constrained', sharex='col', figsize=(10, 7), width_ratios=(1, 1))
+        fid, ad = plt.subplots(2, 1, layout='constrained', sharex='col', figsize=(8, 7))
     cmap = sns.color_palette('coolwarm', as_cmap=True)
     cols = cmap((vals - args.min)/(args.max - args.min))
+    delta_t = args.tlim
     
     for jj, parval in enumerate(vals):
         if not dictq:
@@ -122,6 +124,7 @@ if __name__=='__main__':
         
         try:
             t, hp, hc, hlm, dyn = EOB.EOBRunPy(pardic)
+            # t, hp, hc, hlm, dyn = EOB.EOBRunPy({**pardic, **{'delta_Omglm_nqc': {4: parval}}})
             omglm = np.gradient(hlm[f'{klm}'][1], t)
     
             if args.align == 'peak':
@@ -130,47 +133,36 @@ if __name__=='__main__':
                 tp = t - t[0]
             dyn['t'] = dyn['t'] - dyn['t'][0] + tp[0]
             if args.real:
-                ax[0, 0].plot(tp, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
-                ax[0, 1].plot(tp, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
+                ax[0].plot(tp, hlm['1'][0]*np.cos(hlm['1'][1]), color=col)
             else:
-                ax[0, 0].plot(tp, hlm[f'{klm}'][0], color=col)
-                ax[0, 1].plot(tp, hlm[f'{klm}'][0], color=col)
-            ax[1, 0].plot(tp, omglm, color=col)
-            ax[1, 1].plot(tp, omglm, color=col)
+                ax[0].plot(tp, hlm[f'{klm}'][0], color=col)
+            ax[1].plot(tp, omglm, color=col)
 
             if args.dyn:
-                ad[0, 0].plot(dyn['t'], dyn['r'], color=col)
-                ad[0, 1].plot(dyn['t'], dyn['r'], color=col)
-                ad[1, 0].plot(dyn['t'], dyn['MOmega'], color=col)
-                ad[1, 1].plot(dyn['t'], dyn['MOmega'], color=col)
+                ad[0].plot(dyn['t'], dyn['r'], color=col)
+                ad[1].plot(dyn['t'], dyn['MOmega'], color=col)
         except ValueError:
             print("Not this value!")
     
-    for any_ax in ax[:, 0]:
-        any_ax.set_xlim([1.05*t[0] + (tp[0] - t[0]), -125 + (tp[0] - t[0])])
-    for any_ax in ax[:, 1]:
-        any_ax.set_xlim([-125 + (tp[0] - t[0]), 75 + (tp[0] - t[0])])
-    for any_ax in ax[1, :]:
-        any_ax.set_xlabel(r'$t/M$')
+    # ax[0].set_xlim([1.05*t[0] + (tp[0] - t[0]), -125 + (tp[0] - t[0])])
+    ax[1].set_xlim([-delta_t + (tp[0] - t[0]), 100 + (tp[0] - t[0])])
+    ax[1].set_xlabel(r'$t/M$')
     if args.real:
-        ax[0, 0].set_ylabel(r'$\Re h_{{{}{}}}$'.format(l, m))
+        ax[0].set_ylabel(r'$\Re h_{{{}{}}}$'.format(l, m))
     else:
-        ax[0, 0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))
-    ax[1, 0].set_ylabel(r'$\omega_{{{}{}}}$'.format(l, m))
+        ax[0].set_ylabel(r'$|h_{{{}{}}}|$'.format(l, m))
+    ax[1].set_ylabel(r'$\omega_{{{}{}}}$'.format(l, m))
 
     if args.dyn:
-        for any_ax in ad[:, 0]:
-            any_ax.set_xlim([1.05*t[0] + (tp[0] - t[0]), -125 + (tp[0] - t[0])])
-        for any_ax in ad[:, 1]:
-            any_ax.set_xlim([-125 + (tp[0] - t[0]), 125 + (tp[0] - t[0])])
-        for any_ax in ad[1, :]:
-            any_ax.set_xlabel(r'$t/M$')
-        ad[0, 1].set_ylim([0., 7.])
-        ad[0, 0].set_ylabel(r'$r/M$')
-        ad[1, 0].set_ylabel(r'$\Omega$')
+        # ad[0].set_xlim([1.05*t[0] + (tp[0] - t[0]), -125 + (tp[0] - t[0])])
+        ad[1].set_xlim([-delta_t + (tp[0] - t[0]), 125 + (tp[0] - t[0])])
+        ad[1].set_xlabel(r'$t/M$')
+        ad[0].set_ylim([0., 7.])
+        ad[0].set_ylabel(r'$r/M$')
+        ad[1].set_ylabel(r'$\Omega$')
     
     norm_cbar = matplotlib.colors.Normalize(vmin=args.min, vmax=args.max)
-    cbar      = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm_cbar, cmap=cmap), ax=ax[:, 1])
+    cbar      = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm_cbar, cmap=cmap), ax=ax)
     cbar.ax.set_ylabel(parlabel[parname])
     if args.dyn:
         cbar      = fig.colorbar(matplotlib.cm.ScalarMappable(norm=norm_cbar, cmap=cmap), ax=ad)
